@@ -78,13 +78,13 @@
       </q-toolbar>
     </q-header>
 
-    <q-footer class="bg-grey-2">
+    <!-- <q-footer class="bg-grey-2">
       <q-toolbar class="footerCustomStyle">
         <q-toolbar-title class="text-black text-center text-caption">
           Copyright © 2022 PMD-MIS. All rights reserved.
         </q-toolbar-title>
       </q-toolbar>
-    </q-footer>
+    </q-footer> -->
 
     <q-drawer
       v-model="leftDrawerOpen"

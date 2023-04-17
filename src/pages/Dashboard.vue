@@ -1,112 +1,22 @@
 <!-- eslint-disable vue/multi-word-component-names -->
 <!-- eslint-disable vue/multi-word-component-names -->
 <template>
-  <div>
-    <div class="q-mx-md q-my-md row q-gutter-lg">
-      <div style="width: 850px; height: 400px">
-        <q-card class="my-card" style="height: 400px">
+  <div class="row q-ml-lg q-mt-lg q-gutter-md">
+    <div>
+      <div>
+        <q-card>
           <q-card-section>
-            <div class="row">
-              <div class="text-h6 text-bold" style="font-size: x-large">
-                Tickets Status
-              </div>
-
-              <div class="q-item-section q-ml-auto">
-                <q-btn icon="event" round color="primary">
-                  <q-popup-proxy
-                    @before-show="updateProxy"
-                    cover
-                    transition-show="scale"
-                    transition-hide="scale"
-                  >
-                    <q-date v-model="model" range>
-                      <div>
-                        <q-btn
-                          label="Cancel"
-                          color="primary"
-                          flat
-                          v-close-popup
-                        />
-                        <q-btn
-                          label="OK"
-                          color="primary"
-                          flat
-                          @click="save"
-                          v-close-popup
-                        />
-                      </div>
-                    </q-date>
-                  </q-popup-proxy>
-                </q-btn>
-              </div>
+            <div
+              class="text-h6 text-center"
+              style="font-size: x-large"
+              flex-center
+            >
+              <h1 v-if="avarageTime">{{ avarageTime }}</h1>
+              <q-spinner-hourglass color="purple" size="4em" v-else />
             </div>
+
             <br />
-            <div class="flex flex-center">
-              <apexchart
-                type="bar"
-                width="700"
-                height="310"
-                :options="chartOptions"
-                :series="series"
-              ></apexchart>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-      <div style="width: 850px; height: 400px">
-        <q-card class="my-card" style="height: 400px">
-          <q-card-section>
-            <div class="row">
-              <div
-                class="text-h6 text-bold justify-start"
-                style="font-size: x-large"
-              >
-                Tickets Per Category
-              </div>
-            </div>
-            <div class="flex flex-center">
-              <apexchart
-                type="donut"
-                width="450"
-                :options="chartOptions2"
-                :series="donut"
-              ></apexchart>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <div style="width: 850px; height: 30px">
-        <q-card class="my-card" style="height: 400px">
-          <q-card-section>
-            <div class="text-h6 text-bold" style="font-size: x-large">
-              Tickets Activity
-            </div>
-            <div>
-              <apexchart
-                type="line"
-                height="260"
-                :options="chartOptions3"
-                :series="lines"
-              ></apexchart>
-            </div>
-          </q-card-section>
-        </q-card>
-      </div>
-      <div style="width: 850px; height: 30px">
-        <q-card class="my-card" style="height: 400px">
-          <q-card-section>
-            <div class="text-h6 text-bold" style="font-size: x-large">
-              All Unresolved Tickets by Agents
-            </div>
-            <div>
-              <apexchart
-                type="bar"
-                height="260"
-                :options="chartOptions4"
-                :series="bar"
-              ></apexchart>
-            </div>
+            <div></div>
           </q-card-section>
         </q-card>
       </div>
@@ -114,80 +24,26 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from "vue";
+<script setup>
+import { onMounted, ref } from "vue";
+import axios from "axios";
+import moment from "moment";
+const avarageTime = ref(null);
 
-export default defineComponent({
-  // eslint-disable-next-line vue/multi-word-component-names
-  name: "Dashboard",
+onMounted(() => {
+  console.log("TESTA");
+  const url =
+    "https://it-helpdesk-mirdc.ap.ngrok.io/averageResponseTime?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
 
-  data() {
-    return {
-      series: [
-        {
-          name: "Net Profit",
-          data: [44, 55, 57, 56, 61, 58, 63, 60, 66],
-        },
-        {
-          name: "Revenue",
-          data: [76, 85, 101, 98, 87, 105, 91, 114, 94],
-        },
-        {
-          name: "Free Cash Flow",
-          data: [35, 41, 36, 26, 45, 48, 52, 53, 41],
-        },
-      ],
+  axios({
+    method: "GET",
+    url: url,
+  }).then((response) => {
+    console.log("qays", response.data[0].average_response_time);
 
-      chartOptions: {
-        chart: {
-          type: "bar",
-          height: 350,
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "55%",
-            endingShape: "rounded",
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          width: 2,
-          colors: ["transparent"],
-        },
-        xaxis: {
-          categories: [
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-          ],
-        },
-        yaxis: {
-          title: {
-            text: "$ (thousands)",
-          },
-        },
-        fill: {
-          opacity: 1,
-        },
-        tooltip: {
-          y: {
-            formatter: function (val) {
-              return "$ " + val + " thousands";
-            },
-          },
-        },
-      },
-    };
-  },
+    avarageTime.value = moment(response.data[0].average_response_time).format(
+      "h:mm:ss"
+    );
+  });
 });
 </script>
