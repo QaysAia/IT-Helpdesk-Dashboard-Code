@@ -33,17 +33,17 @@ const avarageTime = ref(null);
 onMounted(() => {
   console.log("TESTA");
   const url =
-    "https://it-helpdesk-mirdc.ap.ngrok.io/averageResponseTime?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
+    // "https://it-helpdesk-mirdc.ap.ngrok.io/averageResponseTime?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
 
-  axios({
-    method: "GET",
-    url: url,
-  }).then((response) => {
-    console.log("qays", response.data[0].average_response_time);
+    axios({
+      method: "GET",
+      url: url,
+    }).then((response) => {
+      console.log("qays", response.data[0].average_response_time);
 
-    avarageTime.value = moment(response.data[0].average_response_time).format(
-      "h:mm:ss"
-    );
-  });
+      avarageTime.value = moment(response.data[0].average_response_time).format(
+        "h:mm:ss"
+      );
+    });
 });
 </script>

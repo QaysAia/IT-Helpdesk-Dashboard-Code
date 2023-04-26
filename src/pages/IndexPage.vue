@@ -1,7 +1,7 @@
 <template>
   <!-- <div class="row q-mx-md q-my-md q-gutter-md"> -->
   <div>
-    <div class="row flex flex-center q-mt-md q-pa-md">
+    <div class="row flex flex-center q-mt-sm q-pa-md">
       <div class="col-lg-2 col-md-4 q-mr-md q-mt-sm">
         <q-card class="my-card">
           <q-card-section>
@@ -71,12 +71,12 @@
         </q-card>
       </div>
     </div>
-    <div class="row flex flex-center q-mt-sm">
+    <div class="row flex flex-center q-mt-xs">
       <div
         v-if="!$q.screen.lt.md"
-        class="col-lg-4 col-10 q-mr-md q-mt-sm print-media"
+        class="col-lg-4 col-10 q-mr-md q-mt-xs print-media"
       >
-        <q-card class="my-card">
+        <q-card class="my-card" style="height: 345px">
           <q-card-section>
             <div class="row">
               <div class="q-pa-xs" style="max-width: 300px">
@@ -88,23 +88,17 @@
               </div>
 
               <div class="q-pa-xs q-ml-xl q-mr-none" style="max-width: 300px">
-                <div class="q-gutter-sm">
-                  <q-btn
-                    @click="ticketsByDivision"
-                    style="background: blueviolet; color: white"
-                    label="SEARCH"
-                    :loading="loading"
-                  />
-                </div>
+                <div class="q-gutter-sm q-ml-xl"></div>
               </div>
 
-              <div class="q-pa-xs q-ml-lg" style="max-width: 200px">
-                <div class="q-gutter-sm">
+              <div class="q-pa-xs q-ml-xl" style="max-width: 230px">
+                <div class="q-gutter-sm q-ml-md">
                   <q-select
                     v-model="model1"
                     :options="options1"
                     stack-label
                     label="Tickets Filter"
+                    @update:model-value="(value) => ticketsByDivision(value)"
                   >
                     <template v-if="model1" v-slot:selected>
                       <p class="q-my-none q-ml-xs q-mr-none text-weight-bolder">
@@ -116,7 +110,7 @@
               </div>
             </div>
 
-            <div v-if="!loading" class="flex flex-center">
+            <div v-if="!loadingTicketByArea" class="flex flex-center">
               <apexchart
                 type="donut"
                 height="400"
@@ -125,7 +119,8 @@
                 :series="donut"
               ></apexchart>
             </div>
-            <div v-if="loading" class="flex flex-center q-pa-md">
+
+            <div v-if="loadingTicketByArea" class="flex flex-center q-pa-md">
               <div>
                 <q-skeleton type="QAvatar" size="210px" />
               </div>
@@ -139,12 +134,12 @@
 
       <div
         v-if="!$q.screen.lt.md"
-        class="col-lg-4 col-10 q-mr-md q-mt-sm print-media"
+        class="col-lg-4 col-10 q-mr-md q-mt-sm print-media2"
       >
-        <q-card class="my-card">
+        <q-card class="my-card" style="height: 345px">
           <q-card-section>
             <div class="row">
-              <div class="q-pa-xs" style="max-width: 300px height: 300px;">
+              <div class="q-pa-xs" style="max-width: 300px">
                 <div class="q-gutter-sm">
                   <div class="text-h6 text-bold" style="font-size: x-large">
                     Tickets by Category
@@ -152,16 +147,18 @@
                 </div>
               </div>
             </div>
+            <br />
 
             <div v-if="!loading" class="flex flex-center">
               <apexchart
-                type="donut"
+                type="pie"
                 height="400"
                 width="450"
-                :options="chartOptions1"
+                :options="chartOptions2"
                 :series="donut1"
               ></apexchart>
             </div>
+
             <div v-if="loading" class="flex flex-center q-pa-md">
               <div>
                 <q-skeleton type="QAvatar" size="210px" />
@@ -174,27 +171,66 @@
         </q-card>
       </div>
 
-      <div class="col-lg-3 col-10 q-mr-md q-mt-sm">
-        <q-card class="my-card" style="height: 340px">
+      <div class="col-lg-3 col-10 q-mr-md q-mt-sm print-media3">
+        <q-card class="my-card" style="height: 345px">
           <q-card-section>
             <div class="text-h6 text-bold" style="font-size: x-large">
               All Tickets
             </div>
             <div class="flex flex-center">
-              <apexchart
-                type="radialBar"
-                width="360"
-                :options="chartOptions"
-                :series="series"
-              ></apexchart>
+              <div class="flex flex-center">
+                <apexchart
+                  type="radialBar"
+                  width="360"
+                  :options="chartOptions"
+                  :series="series"
+                ></apexchart>
+              </div>
             </div>
           </q-card-section>
         </q-card>
       </div>
     </div>
 
-    <div class="row flex flex-center q-mt-md">
-      <div class="col-lg-4 col-10 q-mr-md q-mt-md">
+    <div class="row flex flex-center q-mt-xs">
+      <div
+        v-if="!$q.screen.lt.md"
+        class="col-lg-4 col-10 q-mr-md q-mt-md print-media4"
+      >
+        <q-card class="my-card" style="height: 320px">
+          <q-card-section>
+            <div class="row">
+              <div class="q-pa-xs" style="max-width: 300px">
+                <div class="q-gutter-sm">
+                  <div class="text-h6 text-bold" style="font-size: x-large">
+                    Clients by Category
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="!loading" class="flex flex-center">
+              <apexchart
+                type="pie"
+                height="400"
+                width="450"
+                :options="labelClientsCategory"
+                :series="pieClientsCategory"
+              ></apexchart>
+            </div>
+
+            <div v-if="loading" class="flex flex-center q-pa-md">
+              <div>
+                <q-skeleton type="QAvatar" size="210px" />
+              </div>
+              <div class="q-ml-xl">
+                <q-skeleton width="150px" />
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+      <!-- <div class="col-lg-4 col-10 q-mr-md q-mt-md">
         <q-card class="my-card" style="height: 320px">
           <q-card-section>
             <div class="row">
@@ -202,66 +238,46 @@
                 class="text-h6 text-bold justify-start"
                 style="font-size: x-large"
               >
-                Tickets Activity
+                Clients by Category
               </div>
 
-              <div class="q-item-section q-ml-auto">
-                <q-btn-dropdown color="primary" label="Months" size="11px">
-                  <q-list>
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-item-label>As of Today</q-item-label>
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-item-label>Last 7 Days </q-item-label>
-                      </q-item-section>
-                    </q-item>
-
-                    <q-item clickable v-close-popup @click="onItemClick">
-                      <q-item-section>
-                        <q-item-label>This Month</q-item-label>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </q-btn-dropdown>
-              </div>
+              <div class="q-item-section q-ml-auto"></div>
             </div>
             <br />
+
             <div class="flex flex-center">
               <apexchart
-                type="line"
-                height="230"
-                width="500"
-                :options="chartOptions3"
-                :series="lines"
+                type="donut"
+                height="400"
+                width="450"
+                :options="chartOptions2"
+                :series="donut1"
               ></apexchart>
             </div>
           </q-card-section>
         </q-card>
-      </div>
+      </div> -->
 
-      <div class="col-lg-4 col-10 q-mr-md q-mt-sm print-media3">
+      <div class="col-lg-4 col-10 q-mr-md q-mt-md print-media3">
         <q-card class="my-card" style="height: 320px">
           <q-card-section>
             <div class="text-h6 text-bold" style="font-size: x-large">
-              All Unresolved Tickets
+              All Clients
             </div>
+
             <div class="flex flex-center">
               <apexchart
-                type="bar"
-                height="270"
-                width="510"
-                :options="chartOptions4"
-                :series="bar"
+                type="radialBar"
+                width="400"
+                height="280"
+                :options="allTotalClients"
+                :series="allClients"
               ></apexchart>
             </div>
           </q-card-section>
         </q-card>
       </div>
-      <div class="col-lg-3 col-10 q-mr-md q-mt-sm print-media4">
+      <div class="col-lg-3 col-10 q-mr-md q-mt-md print-media4">
         <q-card class="my-card" style="height: 320px">
           <q-card-section>
             <div>
@@ -284,7 +300,7 @@
               {{ averageTime }}
             </div>
             <br />
-            <div
+            <!-- <div
               class="text-h6 text-center"
               style="font-size: x-large"
               flex-center
@@ -299,16 +315,17 @@
               flex-center
             >
               {{ averageRESTime }}
-            </div>
-            <div v-if="loading" class="flex flex-center">
+            </div> -->
+            <!-- <div v-if="loading" class="flex flex-center">
               <q-spinner color="primary" size="5em" :thickness="10" />
-            </div>
+            </div> -->
           </q-card-section>
         </q-card>
       </div>
     </div>
+    <br />
 
-    <div class="flex flex-center q-mt-sm">
+    <div class="flex flex-center q-mt-xs print-media5">
       Copyright © 2022 PMD-MIS. All rights reserved.
     </div>
   </div>
@@ -328,13 +345,13 @@ export default defineComponent({
   data() {
     return {
       model: ref({
-        label: "Tickets By Area",
-        value: "goog",
+        label: "All Division",
+        value: "",
       }),
 
       model1: ref({
-        label: "Analysis and Testing Division",
-        value: "ATD",
+        label: "All Division",
+        value: "",
       }),
 
       options1: [
@@ -405,6 +422,7 @@ export default defineComponent({
       averageTime: 0,
       averageRESTime: 0,
       loading: false, // Initialize loading state to false
+      loadingTicketByArea: false, // Initialize loading state to false
       // Your other data properties here
 
       series: [],
@@ -419,8 +437,8 @@ export default defineComponent({
 
         plotOptions: {
           radialBar: {
-            startAngle: -135,
-            endAngle: 225,
+            startAngle: -150,
+            endAngle: 210,
             hollow: {
               margin: 0,
               size: "70%",
@@ -453,7 +471,7 @@ export default defineComponent({
             dataLabels: {
               show: true,
               name: {
-                offsetY: -15,
+                offsetY: -10,
                 show: true,
                 color: "#888",
                 fontSize: "17px",
@@ -486,7 +504,7 @@ export default defineComponent({
         stroke: {
           lineCap: "round",
         },
-        labels: ["Ticekts"],
+        labels: ["Tickets"],
       },
 
       donut: [
@@ -516,10 +534,10 @@ export default defineComponent({
         },
         responsive: [
           {
-            breakpoint: 1000,
+            breakpoint: 480,
             options: {
               chart: {
-                width: 1000,
+                width: 200,
               },
               legend: {
                 position: "bottom",
@@ -551,14 +569,14 @@ export default defineComponent({
           type: "donut",
         },
 
-        labels: [,],
+        labels: [],
 
         responsive: [
           {
             breakpoint: 480,
             options: {
               chart: {
-                width: 1000,
+                width: 200,
               },
               legend: {
                 position: "bottom",
@@ -568,115 +586,139 @@ export default defineComponent({
         ],
       },
 
-      lines: [
+      pieClientsCategory: [
         {
-          name: "Tickets",
           data: [],
         },
       ],
+      labelClientsCategory: {
+        dataLabels: {
+          enabled: true,
+        },
 
-      chartOptions3: {
-        chart: {
-          height: 350,
-          type: "line",
-          zoom: {
-            enabled: false,
+        dataLabels: {
+          formatter: function (val, opts) {
+            return opts.w.config.series[opts.seriesIndex];
           },
         },
 
-        stroke: {
-          curve: "straight",
+        chart: {
+          width: 380,
+          type: "pie",
         },
 
-        title: {
-          text: "Tickets by Month",
-          align: "left",
+        labels: [],
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200,
+              },
+              legend: {
+                position: "bottom",
+              },
+            },
+          },
+        ],
+      },
+
+      ticketsData1: [],
+
+      allClients: [],
+      allTotalClients: {
+        chart: {
+          height: 400,
+
+          type: "radialBar",
+        },
+        plotOptions: {
+          radialBar: {
+            hollow: {
+              size: "50%",
+            },
+            dataLabels: {
+              value: {
+                formatter: function (value) {
+                  return parseInt(value);
+                },
+                show: true,
+                suffix: "",
+                fontSize: "20px",
+                fontWeight: "bold",
+              },
+            },
+          },
+        },
+        labels: ["Clients"],
+      },
+
+      bar: [
+        {
+          name: "Total Number",
+          data: [],
+        },
+      ],
+      chartOptionbar: {
+        chart: {
+          height: 350,
+          type: "bar",
+        },
+        plotOptions: {
+          bar: {
+            borderRadius: 0,
+            columnWidth: "40%",
+          },
+        },
+        dataLabels: {
+          enabled: false,
+        },
+        stroke: {
+          width: 0,
         },
 
         grid: {
           row: {
-            colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-            opacity: 0.5,
+            colors: ["#fff", "#f2f2f2"],
           },
         },
 
         xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-          ],
-        },
-      },
-
-      ticketsData1: [],
-      bar: [
-        {
-          data: [10, 5, 3, 1, 12, 5, 7, 6, 1],
-        },
-      ],
-      chartOptions4: {
-        chart: {
-          type: "bar",
-          height: 350,
-        },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            horizontal: true,
+          labels: {
+            style: {
+              fontSize: "9px",
+            },
+            rotate: -30,
           },
-        },
-        dataLabels: {
-          enabled: true,
-        },
-        xaxis: {
-          categories: [
-            "Qays Khairy Gadat",
-            "John Lloyd Etoc",
-            "Kai Sotto",
-            "Lebron James",
-            "Kevin Durant",
-            "Steph Curry",
-            "Kyrie Irving",
-            "Derick Rose",
-            "Ja Morant",
-            "Kobe Bryant",
-          ],
+          categories: [],
         },
       },
     };
   },
+
   created() {
     this.fetchTickets();
   },
   methods: {
     async ticketsByDivision() {
       console.log("query", this.model1.value);
-      this.loading = true;
-      const urlticketsByDivision = `https://it-helpdesk-mirdc.ap.ngrok.io/ticketsByCategory?from=2022/01/01&to=2022/12/31&projID=1&division=${this.model1.value}`;
+      this.loadingTicketByArea = true;
+      const urlticketsByDivision = `https://it-helpdesk-mirdc.ap.ngrok.io/ticketsByCategory?from=2023/01/01&to=2023/12/31&projID=38&division=${this.model1.value}`;
 
       const responseticketsByDivision = await axios({
         method: "GET",
         url: urlticketsByDivision,
       });
-      this.donut = responseticketsByDivision.data.map((cat) => cat.tickets);
+      this.donut = responseticketsByDivision.data.map((cat) => cat.tickets) || {
+        0: 0,
+      };
       this.chartOptions1.labels = responseticketsByDivision.data.map(
         (cat) => cat.category_name
       );
-      this.loading = false;
-      console.log(
-        "responseticketsByDivision ",
-        responseticketsByDivision,
-        "this.model1.value",
-        this.model1.value
-      );
+      this.loadingTicketByArea = false;
+      console.log("this.donut", this.donut);
     },
+
     async fetchTickets() {
       const url4 =
         "https://it-helpdesk-mirdc.ap.ngrok.io/ticketsForProj?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
@@ -689,6 +731,7 @@ export default defineComponent({
       console.log("response4", this.ticketsData1);
     },
   },
+
   computed: {
     ongoingTickets() {
       return this.ticketsData1
@@ -734,23 +777,6 @@ export default defineComponent({
     this.loading = true; // Set loading state to true before making API requests
 
     try {
-      // const url =
-      //   "https://it-helpdesk-mirdc.ap.ngrok.io/ticketsByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
-
-      // const response = await axios({
-      //   method: "GET",
-      //   url: url,
-      // });
-
-      // console.log("resssss", response.data);
-      // this.donut = response.data.map((cat) => cat.tickets);
-      // this.chartOptions1.labels = response.data.map((cat) => cat.category_name);
-
-      // console.log(
-      //   "TESTA",
-      //   response.data.map((cat) => cat.tickets)
-      // );
-
       const url =
         "https://it-helpdesk-mirdc.ap.ngrok.io/ticketsByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
 
@@ -760,31 +786,12 @@ export default defineComponent({
       });
 
       console.log("resssss", response.data);
-      this.donut1 = response.data.map((cat) => cat.tickets);
+      this.donut = response.data.map((cat) => cat.tickets);
       this.chartOptions1.labels = response.data.map((cat) => cat.category_name);
 
       console.log(
-        "TESTA",
+        "BEEEEEEEEEEFFFOOREEEEEEEEEEEEE",
         response.data.map((cat) => cat.tickets)
-      );
-
-      const url2 =
-        "https://it-helpdesk-mirdc.ap.ngrok.io/usersByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
-
-      const response2 = await axios({
-        method: "GET",
-        url: url2,
-      });
-
-      console.log("test clients", response2.data);
-      this.donut = response2.data.map((cat) => cat.clients);
-      this.chartOptions2.labels = response2.data.map(
-        (cat) => cat.category_name
-      );
-
-      console.log(
-        "TEST clients",
-        response2.data.map((cat) => cat.clients)
       );
 
       this.series = [
@@ -793,7 +800,43 @@ export default defineComponent({
         }, 0),
       ];
 
+      const url3 =
+        "https://it-helpdesk-mirdc.ap.ngrok.io/usersByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
+
+      const response3 = await axios({
+        method: "GET",
+        url: url3,
+      });
+      console.log("test clients", response3.data);
+      this.pieClientsCategory = response3.data.map((cat) => cat.clients);
+      const categoryNames = response3.data.map((cat) => cat.category_name);
+      this.labelClientsCategory.labels = Object.values(categoryNames);
+      // this.labelClientsCategory.labels = categoryArr;
+      console.log(this.labelClientsCategory.labels);
+
+      console.log(
+        "TEST clients fsadfkldsfldsjafklfklasdkj",
+        this.labelClientsCategory.labels
+      );
+
       console.log("TESTA");
+
+      // const url3 =
+      //   "https://it-helpdesk-mirdc.ap.ngrok.io/usersByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
+
+      // axios.get(url3).then((response3) => {
+      //   const categoryNames = response3.data.map((cat) => cat.category_name);
+      //   this.chartOptionbar.xaxis.categories = Object.values(categoryNames);
+      // });
+
+      // // console.log("test clients", response3.data);
+      // // this.bar.data = response3.data.map((cat) => cat.clients);
+      // // const categoryNames = response3.data.map((cat) => cat.category_name);
+      // // this.chartOptionbar.xaxis.categories = Object.values(categoryNames);
+
+      // // console.log("chart option bar", this.chartOptionbar);
+
+      // console.log("baaarrr", this.chartOptionbar);
     } catch (error) {
       console.error(error);
     }
@@ -801,25 +844,18 @@ export default defineComponent({
     try {
       const url4 =
         "https://it-helpdesk-mirdc.ap.ngrok.io/averageResponseTime?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
-
       const response4 = await axios.get(url4);
-
       console.log("qays", response4.data[0].average_response_time);
-
       this.averageTime = moment(response4.data[0].average_response_time).format(
         "h:mm:ss"
       );
-
-      const url5 =
-        "https://it-helpdesk-mirdc.ap.ngrok.io/averageResolutionTimeSimple?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
-
-      const response5 = await axios.get(url5);
-
-      console.log("qays", response4.data[0].aaverage_resolution_time_simple);
-
-      this.averageRESTime = moment(
-        response5.data[0].aaverage_resolution_time_simple
-      ).format("h:mm:ss");
+      // const url5 =
+      //   "https://it-helpdesk-mirdc.ap.ngrok.io/averageResolutionTimeSimple?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=1";
+      // const response5 = await axios.get(url5);
+      // console.log("qays", response4.data[0].aaverage_resolution_time_simple);
+      // this.averageRESTime = moment(
+      //   response5.data[0].aaverage_resolution_time_simple
+      // ).format("h:mm:ss");
     } catch (error) {
       console.error(error);
     }
@@ -827,28 +863,62 @@ export default defineComponent({
     this.loading = false; // Set loading state to false after data has been loaded
   },
 
-  async mounted() {},
+  async mounted() {
+    this.ticketsByDivision();
+
+    const url2 =
+      "https://it-helpdesk-mirdc.ap.ngrok.io/ticketsByCategory?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
+
+    const response2 = await axios({
+      method: "GET",
+      url: url2,
+    });
+
+    console.log("test clients", response2.data);
+    this.donut1 = response2.data.map((cat) => cat.tickets);
+    this.chartOptions2.labels = response2.data.map((cat) => cat.category_name);
+
+    console.log("TEST clients erick", this.chartOptions2.labels);
+
+    const urlallClients =
+      "https://it-helpdesk-mirdc.ap.ngrok.io/clientsForProj?from=2023%2F01%2F01&to=2023%2F12%2F31&projID=38";
+
+    const responseallClients = await axios({
+      method: "GET",
+      url: urlallClients,
+    });
+
+    console.log("test clients", responseallClients.data);
+    this.allClients = responseallClients.data.map((cat) => cat.clients);
+
+    console.log("TEST clientssssssss", this.allClients);
+  },
 });
 </script>
 
 <style media="print" scoped>
 @media print {
   .print-media:not(#print-media) {
-    margin-top: 200px;
+    margin-top: 50px;
   }
 
   .print-media2:not(#print-media2) {
-    height: 600px;
+    margin-top: 330px;
   }
 
   .print-media3:not(#print-media3) {
-    height: 600px;
+    margin-top: 50px;
   }
 
   .print-media4:not(#print-media4) {
-    height: 600px;
+    margin-top: 330px;
+  }
+
+  .print-media5:not(#print-media5) {
+    margin-top: 450px;
   }
 }
+
 #q-app
   > div
   > div.q-page-container

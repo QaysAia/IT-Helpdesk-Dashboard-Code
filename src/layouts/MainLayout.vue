@@ -86,7 +86,7 @@
       </q-toolbar>
     </q-footer> -->
 
-    <q-drawer
+    <!-- <q-drawer
       v-model="leftDrawerOpen"
       show-if-above
       bordered
@@ -116,7 +116,7 @@
           </q-item-section>
         </q-item>
       </q-list>
-    </q-drawer>
+    </q-drawer> -->
 
     <q-page-container>
       <router-view />
@@ -136,16 +136,6 @@ const linksList = [
     icon: "dashboard",
     path: "/",
   },
-  {
-    title: "Graphs",
-    icon: "query_stats",
-    path: "/dashboard",
-  },
-  {
-    title: "Customer",
-    icon: "mdi-account-group-outline",
-    path: "/customer",
-  },
 ];
 
 const leftDrawerOpen = ref(false);
@@ -161,6 +151,11 @@ function openInNewTab(url) {
 </script>
 
 <style scoped>
+@media print {
+  .q-drawer {
+    display: none;
+  }
+}
 .footerCustomStyle {
   min-height: 24px;
 }
